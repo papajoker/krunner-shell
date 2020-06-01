@@ -7,15 +7,15 @@ can run commands
 
 ### configure
 
-all in bash file `~/.config/krunnershell &`
+all in bash file `~/.config/krunnershell.sh`
 
 
 create actions
 In krunner run `action:`
 
 In bash file create one or two function for one action
-match_action() {...}    return text list
-run_action() {...}      optional, click on line
+ - match_action() {...}    return text list
+ - run_action() {...}      optional, click on line
 
 example: action "ls" in krunner: "ls:/etc/"
 
@@ -28,11 +28,7 @@ match_ls(){
   ls -dHp -1 $match --color=never
 }
 run_ls (){
-  if [[ -d "$1" ]]; then
-    dolphin "$1"
-  else
-    kate "$1"
-  fi
+  xdg-open "$1"
 }
 ```
 

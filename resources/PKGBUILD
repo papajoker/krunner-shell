@@ -1,7 +1,7 @@
 # Simple model test
 pkgname=krunner-shell-git
 _pkgname=krunner-shell
-pkgver=0.1.0
+pkgver=r2.810fad2
 pkgrel=1
 pkgdesc="plasma krunner plugin run shell commands"
 arch=('any')
@@ -16,13 +16,13 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 package() {
   cd "${srcdir}/${_pkgname}"
   install -d ${pkgdir}/usr/{share/{kservices5,dbus-1/services},lib/qt/plugins}
   cp resources/org.manjaro.shell.krunner.service ${pkgdir}/usr/share/dbus-1/services/
-  cp resources/plasma-runner-shell.desktop ${pkgdir}/usr/share/kservices5/
+  cp resources/plasma-runner-ushell.desktop ${pkgdir}/usr/share/kservices5/
   install -m755 plugin/krunner_shell.py ${pkgdir}/usr/lib/qt/plugins/krunner_shell.py
 } 
