@@ -1,7 +1,7 @@
 #!/bin/env python3
 
 """
-https://cgit.kde.org/krunner.git/plain/src/data/org.kde.krunner1.xml
+https://invent.kde.org/frameworks/krunner/-/blob/master/src/data/org.kde.krunner1.xml
 https://api.kde.org/frameworks/krunner/html/runnercontext_8cpp_source.html#l00374
 https://techbase.kde.org/Development/Tutorials/Plasma4/AbstractRunner
 
@@ -79,7 +79,7 @@ class Runner(dbus.service.Object):
         """ get the matches and returns a packages list """
         self.prefix = ""
         query = query.strip().lower()
-        print(f"match: {query}...")
+        #print(f"match: {query}...")
         if not self.actions or not ":" in query:
             return []
 
@@ -96,15 +96,17 @@ class Runner(dbus.service.Object):
             shell=True, text=True,
             stdout=subprocess.PIPE
         ).communicate()
-        print(f"stdout cmd: match_{self.prefix} \"{query}\" : {out}")
+        #print(f"stdout cmd: match_{self.prefix} \"{query}\" : {out}")
 
         if "||" in out:
             #if title != to run
-            #split line and set [0] in data and [1] in titre
+            #split line and set [0] in data(link) and [1] in titre
             ret = []
+            rel = 1
             for node in out.splitlines():
                 data = node.split("||", 1)
-                ret.append(tuple([data[0], data[1], "", 32, 0.8, {"subtext": ""}]))
+                ret.append(tuple([data[0], data[1], "", 32, rel, {"subtext": ""}]))
+                rel = rel - 0.01
             return ret
         else:
             return [tuple([node, node, "", 32, 0.8, {"subtext": ""}]) for node in out.splitlines()]
