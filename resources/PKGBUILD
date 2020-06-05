@@ -1,7 +1,7 @@
 # Simple model test
 pkgname=krunner-shell-git
 _pkgname=krunner-shell
-pkgver=r4.a792b42
+pkgver=r5.ea25722
 pkgrel=1
 pkgdesc="plasma krunner plugin run shell commands"
 arch=('any')

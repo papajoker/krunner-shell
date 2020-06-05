@@ -51,6 +51,13 @@ class Runner(dbus.service.Object):
         self.config = f"{Path.home()}/.config/krunnershell.sh"
         self.actions = ()
         self.prefix = ""
+        self.size = 0
+        self.loadConfig()
+
+    def loadConfig(self):
+        self.actions = ()
+        self.prefix = ""
+        self.size = 0
         try:
             with open(self.config, "r") as file_in:
                 for line in file_in:
@@ -58,30 +65,20 @@ class Runner(dbus.service.Object):
                         name = line[6:].rsplit('(', 1)[0]
                         if name:
                             self.actions += (name,)
+            self.size = Path(self.config).stat().st_size
             print(self.actions)
         except FileNotFoundError:
             pass
-
-    '''def _setrelevance(self, pkg: Package, query: str)->float:
-        """ list order, display only top 10/20 by relevance """
-        mini = 0.01
-        relevance = mini
-        name = pkg.get_name()
-        if query == name:
-            relevance = 1
-        elif name.startswith(query) and not "-i18n" in name:
-            relevance = 0.4
-        else:
-            relevance = 0.2 if query in name else mini
-            if "-i18n" in name:
-                relevance = mini
-        return relevance'''
 
     @dbus.service.method(iface, in_signature='s', out_signature='a(sssida{sv})')
     def Match(self, query: str):
         """ get the matches and returns a packages list """
         self.prefix = ""
         query = query.strip().lower()
+
+        if self.size != Path(self.config).stat().st_size:
+            self.loadConfig()
+
         #print(f"match: {query}...")
         if not self.actions or not ":" in query:
             return []
