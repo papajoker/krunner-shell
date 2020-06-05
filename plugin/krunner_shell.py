@@ -51,13 +51,16 @@ class Runner(dbus.service.Object):
         self.config = f"{Path.home()}/.config/krunnershell.sh"
         self.actions = ()
         self.prefix = ""
-        with open(self.config, "r") as file_in:
-            for line in file_in:
-                if line.startswith('match_'):
-                    name = line[6:].rsplit('(', 1)[0]
-                    if name:
-                        self.actions += (name,)
-        print(self.actions)
+        try:
+            with open(self.config, "r") as file_in:
+                for line in file_in:
+                    if line.startswith('match_'):
+                        name = line[6:].rsplit('(', 1)[0]
+                        if name:
+                            self.actions += (name,)
+            print(self.actions)
+        except FileNotFoundError:
+            pass
 
     '''def _setrelevance(self, pkg: Package, query: str)->float:
         """ list order, display only top 10/20 by relevance """
