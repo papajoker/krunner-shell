@@ -58,6 +58,9 @@ class Runner(dbus.service.Object):
         self.actions = ()
         self.prefix = ""
         self.size = 0
+        if not Path(self.config).exists():
+            with open(self.config, "w") as file_out:
+                file_out.write("\nmatch_about(){\n\tuname -smrn\n}\n")
         try:
             with open(self.config, "r") as file_in:
                 for line in file_in:
@@ -76,7 +79,10 @@ class Runner(dbus.service.Object):
         self.prefix = ""
         query = query.strip().lower()
 
-        if self.size != Path(self.config).stat().st_size:
+        try:
+            if self.size != Path(self.config).stat().st_size:
+                self.loadConfig()
+        except FileNotFoundError:
             self.loadConfig()
 
         #print(f"match: {query}...")
