@@ -92,7 +92,7 @@ class Runner(dbus.service.Object):
         #TEST plugin without datas
         #return [tuple([n, n, "", 32, 0.5, {"subtext": ""}]) for n in self.actions]
 
-        self.prefix = query.split(':', 1)[0]
+        self.prefix = query.split(':', 1)[0].replace(" ", "_")
         if self.prefix not in self.actions:
             return []
         query = query[len(self.prefix)+1:].strip()
