@@ -104,18 +104,20 @@ class Runner(dbus.service.Object):
         ).communicate()
         #print(f"stdout cmd: match_{self.prefix} \"{query}\" : {out}")
 
-        if "||" in out:
-            #if title != to run
-            #split line and set [0] in data(link) and [1] in titre
-            ret = []
-            rel = 1
-            for node in out.splitlines():
+        ret = []
+        rel = 1
+        for node in out.splitlines():
+            if "||" in node:    #if title != to run, split line and set [0] in data(link) and [1] in titre
                 data = node.split("||", 1)
-                ret.append(tuple([data[0], data[1], "", 32, rel, {"subtext": ""}]))
-                rel = rel - 0.01
-            return ret
-        else:
-            return [tuple([node, node, "", 32, 0.8, {"subtext": ""}]) for node in out.splitlines()]
+            else:
+                data = [node, node]
+            ret.append(tuple([data[0], data[1], "", 32, rel, {"subtext": ""}]))
+            rel = rel - 0.02
+
+        if self.prefix == "about":
+            ret.append(tuple(["", f"keys: {self.actions}", "", 0, 0.01, {"subtext": ""}]))
+        return ret
+
 
     @dbus.service.method(iface, in_signature='ss')
     def Run(self, data: str, _action_id: str):
