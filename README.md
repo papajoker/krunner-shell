@@ -136,20 +136,25 @@ run_pac(){
 ```
 
  * get/open git project `git:`
- (first call is very long !!!)
+ (first call is long !!!)
  ```bash
  __getallgit(){
-  while read -r f; do
-    url=$(grep "^[^;].*url.*http" "${f}/config" -m 1 2>/dev/null) # 'url.*http' for get alls
-    if [ -n "$url" ]; then
-      ngit="${url##*/}"
-      echo -e "${f:0:${#f}-4}||${ngit%%.*}\t${f:29:${#f}-33}"
-    fi
-  done < <(find /home/Data/Patrick/workspace -name ".git" -d 2>/dev/null|sort)
+python - "$0"<<'EOF'
+from pathlib import Path
+wpath = "/home/Data/Patrick/workspace/"  # CHANGE PATH !
+for p in Path(wpath).glob('**/.git/config'):
+    with open(p, "r") as fp:
+        for line in fp:
+            if "url =" in line:
+                ppath = str(p)[:-11]
+                url = line.split("=", 2)[1].strip()
+                print(f"{ppath}||{url.split('/')[-1]}\t{ppath[len(wpath):]}||{url}")
+                break
+EOF
 }
 match_git(){
   ## list git projects ##
-  [[ -f "/tmp/krunner-allgit" ]] || __getallgit > "/tmp/krunner-allgit"    # save first run of day
+  if ! [[ -s "/tmp/krunner-allgit" ]] && __getallgit > "/tmp/krunner-allgit"    # save first run of day
   grep "$1" "/tmp/krunner-allgit" --color=never
 }
 run_git(){
