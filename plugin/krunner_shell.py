@@ -60,7 +60,8 @@ class Runner(dbus.service.Object):
         self.size = 0
         if not Path(self.config).exists():
             with open(self.config, "w") as file_out:
-                file_out.write("\nmatch_about(){\n\tuname -smrn\n}\n")
+                cmd=r"cmds=($(set | awk -F'_| ' '/^match_.*\(\)/ {print $2}'));echo 'keys:' ${cmds[@]}"
+                file_out.write("\nmatch_about(){\n\t"+ cmd +"\n\tuname -smrn\n}\n")
         try:
             with open(self.config, "r") as file_in:
                 for line in file_in:
@@ -114,8 +115,6 @@ class Runner(dbus.service.Object):
             ret.append(tuple([data[0], data[1], "", 32, rel, {"subtext": ""}]))
             rel = rel - 0.02
 
-        if self.prefix == "about":
-            ret.append(tuple(["", f"keys: {self.actions}", "", 0, 0.01, {"subtext": ""}]))
         return ret
 
 

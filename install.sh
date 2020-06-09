@@ -28,3 +28,4 @@ kquitapp5 krunner
 #kstart5 krunner
 qdbus org.kde.krunner /App org.kde.krunner.App.querySingleRunner usershell ls:/etc/pa
 #qdbus --literal org.manjaro.shell.krunner /krunner org.kde.krunner1.Match "ls:/etc/pac"
+
