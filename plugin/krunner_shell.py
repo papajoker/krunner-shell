@@ -109,10 +109,12 @@ class Runner(dbus.service.Object):
         rel = 1
         for node in out.splitlines():
             if "||" in node:    #if title != to run, split line and set [0] in data(link) and [1] in titre
-                data = node.split("||", 1)
+                data = node.split("||", 2)
+                for _ in range(len(data), 3):
+                    data.append("")
             else:
-                data = [node, node]
-            ret.append(tuple([data[0], data[1], "", 32, rel, {"subtext": ""}]))
+                data = [node, node, ""]
+            ret.append(tuple([data[0], data[1], "", 32, rel, {"subtext": data[2]}]))
             rel = rel - 0.02
 
         return ret
