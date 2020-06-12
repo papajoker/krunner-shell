@@ -49,6 +49,26 @@ run_tabs(){
 }
 ```
 
+ * play web radio `radio:`
+ ```bash
+ match_radio(){
+  echo "http://ais-sa2-dal01-1.cdnstream.com:80/1989_64.aac||Rock mix||rock"
+  echo "http://node1.mingusradio.com:7646/rock||Mingus radio||rock"
+  echo "http://stream.punkrockers-radio.de:8000/mp3||PunkRockers||punk"
+  echo "http://94.23.26.22:8090/live.mp3||Punk fm||punk"
+}
+run_radio(){
+  if pacman -Qq clementine 2>/dev/null; then
+    qdbus org.mpris.MediaPlayer2.clementine /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.OpenUri "$1" ||clementine "$1"
+    return 0
+  fi
+  if pacman -Qq vlc 2>/dev/null; then
+    qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.OpenUri "$1" || vlc "$1"
+    return 0
+  fi
+}
+ ```
+
  * display man in browser `man:`
 ```bash
 match_man(){
