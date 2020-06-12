@@ -122,7 +122,8 @@ run_ps(){
  * get env variables
 ```bash
 match_env() {
-  env | grep -i "$1" | grep -v "^_"
+  #show bash and zsh config !
+  $SHELL -ic "/usr/bin/env"| grep "="| grep -i "$1" --color=never| grep -v "^_"
 }
 ```
 
