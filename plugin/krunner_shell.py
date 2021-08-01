@@ -114,9 +114,9 @@ class Runner(dbus.service.Object):
                 data = node.split("||", 2)
                 for _ in range(len(data), 3):
                     data.append("")
-            elif "\\" in node:
-                data = node.split("\\", 0)
-                icon = node.split("\\", 1)
+            elif "\\ICON:" in node:
+                data = [node.split("\\ICON:")[0],node.split("\\ICON:")[0],""]
+                icon = node.split("\\ICON:")[1]
             else:
                 data = [node, node,""]
             ret.append(tuple([data[0], data[1], icon, 32, rel, {"subtext": data[2]}]))

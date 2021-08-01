@@ -186,3 +186,6 @@ run_git(){
   qdbus org.kde.konsole  /Sessions/${session_num} org.kde.konsole.Session.runCommand "git status" &
 }
  ```
+
+
+* Search Youtube with suggestions
