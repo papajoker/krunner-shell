@@ -109,7 +109,6 @@ class Runner(dbus.service.Object):
         rel = 1
         icon = "search"
         for node in out.splitlines():
-            print(node)
             if "||" in node:    #if title != to run, split line and set [0] in data(link) and [1] in titre
                 data = node.split("||", 2)
                 for _ in range(len(data), 3):
