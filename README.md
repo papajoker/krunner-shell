@@ -187,5 +187,19 @@ run_git(){
 }
  ```
 
-
+To add icons, append `\\ICON:`
 * Search Youtube with suggestions
+```bash
+match_youtube() {
+urlencode() {
+echo ${1// /"%20"}
+}
+lang="en"
+url="http://suggestqueries.google.com/complete/search?client=chrome&hl=$lang&gl=us&ds=yt&q=$(urlencode "$*")"
+res="$(jq -r '.[1] | .[]' <<< "$(curl -s "$url" &)" | tr -d '"')"
+echo "$res" |  while read line; do echo "$line\\ICON:youtube"; done
+}
+run_youtube() {
+  xdg-open "https://www.youtube.com/results?search_query=$*"
+}
+```
