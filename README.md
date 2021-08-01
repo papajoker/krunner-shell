@@ -186,3 +186,40 @@ run_git(){
   qdbus org.kde.konsole  /Sessions/${session_num} org.kde.konsole.Session.runCommand "git status" &
 }
  ```
+
+To add icons, append `\\ICON:`
+* Search Youtube with suggestions
+```bash
+match_youtube() {
+urlencode() {
+echo ${1// /"%20"}
+}
+lang="en"
+url="http://suggestqueries.google.com/complete/search?client=chrome&hl=$lang&gl=us&ds=yt&q=$(urlencode "$*")"
+res="$(jq -r '.[1] | .[]' <<< "$(curl -s "$url" &)" | tr -d '"')"
+echo "$res" |  while read line; do echo "$line\\ICON:youtube"; done
+}
+run_youtube() {
+  xdg-open "https://www.youtube.com/results?search_query=$*"
+}
+```
+
+* Search Archwiki with suggestions
+```bash
+match_archwiki() {
+  
+urlencode() {
+echo ${1// /"%20"}
+}
+
+limit=10
+
+url="https://wiki.archlinux.org/api.php?action=opensearch&format=json&formatversion=2&search=$(urlencode "$*")&namespace=0%7C3000&limit=$limit&suggest=true"
+res=$(jq -r  '.[1][]'  <<< "$(curl -s "$url" &)" | tr -d '"' )
+echo "$res" | while read line; do echo "$line\\ICON:archlinux"; done
+}
+
+run_archwiki() {
+  xdg-open "https://wiki.archlinux.org/index.php?search=$*&title=Special%3ASearch&go=Go"
+}
+```

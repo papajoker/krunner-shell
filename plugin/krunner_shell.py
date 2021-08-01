@@ -107,14 +107,18 @@ class Runner(dbus.service.Object):
 
         ret = []
         rel = 1
+        icon = "search"
         for node in out.splitlines():
             if "||" in node:    #if title != to run, split line and set [0] in data(link) and [1] in titre
                 data = node.split("||", 2)
                 for _ in range(len(data), 3):
                     data.append("")
+            elif "\\ICON:" in node:
+                data = [node.split("\\ICON:")[0],node.split("\\ICON:")[0],""]
+                icon = node.split("\\ICON:")[1]
             else:
-                data = [node, node, ""]
-            ret.append(tuple([data[0], data[1], "", 32, rel, {"subtext": data[2]}]))
+                data = [node, node,""]
+            ret.append(tuple([data[0], data[1], icon, 32, rel, {"subtext": data[2]}]))
             rel = rel - 0.02
 
         return ret
